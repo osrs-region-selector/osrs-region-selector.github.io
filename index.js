@@ -47,14 +47,10 @@ function updateItemList() {
     }
 
     // Clear existing region boxes
-    items.innerHTML = '';
-
-    // Create a Set to keep track of displayed items to avoid duplicates
-    const displayedItems = new Set();
+    const regionContainer = document.getElementById('items');
+    regionContainer.innerHTML = '';
 
     // Group items by regions
-    const regions = {};
-
     const selectedCategories = [];
     categories.forEach(category => {
         if (category.checked) {
@@ -62,23 +58,31 @@ function updateItemList() {
         }
     });
 
-    itemData.items.forEach(item => {
+    const displayedItems = new Set();
+
+    const regions = {};
+
+    itemData.items.concat(itemData.bosses).forEach(item => {
         if (item.regions.every(region => selectedCategories.includes(`cat${region}`))) {
-            item.regions.sort(); // Sort to handle combined regions in a consistent order
+            item.regions.sort();
             const regionKey = item.regions.join(',');
+
             if (!regions[regionKey]) {
-                regions[regionKey] = [];
+                regions[regionKey] = { items: [], bosses: [] };
             }
 
-            // Check if the item is not a duplicate before adding it
             if (!displayedItems.has(item.name)) {
-                regions[regionKey].push(item);
+                if (item.type === 'item') {
+                    regions[regionKey].items.push(item);
+                } else if (item.type === 'boss') {
+                    regions[regionKey].bosses.push(item);
+                }
+
                 displayedItems.add(item.name);
             }
         }
     });
 
-    // Create a box for each region (combined regions at the bottom)
     for (const region in regions) {
         const regionBox = document.createElement('div');
         regionBox.className = 'region-box';
@@ -87,28 +91,59 @@ function updateItemList() {
         regionTitle.className = 'region-title';
         const regionIds = region.split(',').map(Number);
         if (regionIds.length > 1) {
-            // Handle combined regions
             const regionNames = regionIds.map(getRegionName);
             regionTitle.innerText = regionNames.join(' & ');
         } else {
-            // Handle individual regions
             regionTitle.innerText = getRegionName(regionIds[0]);
         }
         regionBox.appendChild(regionTitle);
 
-        const regionItemList = document.createElement('ul');
-        regionItemList.className = 'region-items';
+        if (regions[region].items.length > 0) {
+            const itemHeader = document.createElement('div');
+            itemHeader.className = 'header';
+            itemHeader.innerText = 'Items:';
+            regionBox.appendChild(itemHeader);
 
-        regions[region].forEach(item => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<div class="list-item"><img loading="lazy" crossorigin="anonymous" src="${item.imgUrl}" alt="${item.name}"></div><span>${item.name}</span>`;
-            regionItemList.appendChild(listItem);
-        });
+            const itemContainer = document.createElement('ul');
+            itemContainer.className = 'region-items';
 
-        regionBox.appendChild(regionItemList);
-        items.appendChild(regionBox);
+            regions[region].items.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<div class="list-item">
+                    <img loading="lazy" crossorigin="anonymous" src="${item.imgUrl}" alt="${item.name}">
+                </div>
+                <span>${item.name}</span>`;
+                itemContainer.appendChild(listItem);
+            });
+
+            regionBox.appendChild(itemContainer);
+        }
+
+        if (regions[region].bosses.length > 0) {
+            const bossHeader = document.createElement('div');
+            bossHeader.className = 'header';
+            bossHeader.innerText = 'Bosses:';
+            regionBox.appendChild(bossHeader);
+
+            const bossContainer = document.createElement('ul');
+            bossContainer.className = 'region-items';
+
+            regions[region].bosses.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<div class="list-item">
+                    <img loading="lazy" crossorigin="anonymous" src="${item.imgUrl}" alt="${item.name}">
+                </div>
+                <span>${item.name}</span>`;
+                bossContainer.appendChild(listItem);
+            });
+
+            regionBox.appendChild(bossContainer);
+        }
+
+        regionContainer.appendChild(regionBox);
     }
 }
+
 
 function getRegionName(regionId) {
     const regionNames = {

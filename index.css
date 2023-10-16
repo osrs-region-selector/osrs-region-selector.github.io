@@ -38,6 +38,11 @@ body {
 
 .region-title {
     font-weight: bold;
+    padding-bottom: 1em;
+}
+
+.header {
+    font-weight: bold;
 }
 
 .region-items {
