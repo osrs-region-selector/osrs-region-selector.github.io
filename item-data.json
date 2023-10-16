@@ -356,18 +356,13 @@
             "regions": [3]
         },
         {
-            "name": "Tumeken's shadow",
-            "imgUrl": "https://oldschool.runescape.wiki/images/Tumeken's_shadow.png",
-            "regions": [3]
-        },
-        {
             "name": "Elidinis' ward",
             "imgUrl": "https://oldschool.runescape.wiki/images/Elidinis'_ward.png",
             "regions": [3]
         },
         {
             "name": "Tumeken's Shadow",
-            "imgUrl": "https://oldschool.runescape.wiki/images/Tumeken's_Shadow.png",
+            "imgUrl": "https://oldschool.runescape.wiki/images/Tumeken's_shadow.png",
             "regions": [3]
         },
         {
@@ -828,11 +823,6 @@
             "name": "Avernic Defender",
             "imgUrl": "https://oldschool.runescape.wiki/images/Avernic_defender.png",
             "regions": [2,6]
-        },
-        {
-            "name": "Vampyrium Vambraces",
-            "imgUrl": "https://oldschool.runescape.wiki/images/Vampyrium_vambraces.png",
-            "regions": [6]
         },
         {
             "name": "Amulet of Blood Fury",
